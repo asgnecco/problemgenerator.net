@@ -1,7 +1,8 @@
-var http = require('http');
+const express = require('express')
+const app = express()
 var generator = require('./practice-generator');
 
-http.createServer(function (req, res) {
+app.get('/', (req, res) =>
 	res.writeHead(200, {'Content-Type': 'text/json'});
 	
 	var problemjson={};
