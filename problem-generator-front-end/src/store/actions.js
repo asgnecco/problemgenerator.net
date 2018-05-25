@@ -1,0 +1,3 @@
+export const CHANGE_MENU = 'CHANGE_MENU';
+export const CHANGE_DIFFICULTY = 'CHANGE_DIFFICULTY';
+export const SELECT_TOPIC = 'SELECT_TOPIC';
