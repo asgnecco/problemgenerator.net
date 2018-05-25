@@ -1,0 +1,22 @@
+.subSection {
+  background: transparent;
+  color: white;
+  text-align: left;
+
+  h4 {
+    color: lighten(#1bff37, 10%);
+    margin-left: 5%;
+    font-size: 18px;
+  }
+
+  p {
+    border-left: 2px solid darken(#1bff37, 10%);
+    padding: 3% 5%;
+    margin: 5% 10%;
+    background-color: #353535;
+  }
+
+  p:hover {
+    background-color: lighten(#353535, 10%);
+  }
+}

@@ -1,22 +1,23 @@
 import React from 'react';
-import classes from './navMenu.scss';
+import styles from './navMenu.scss';
+import animations from './animation.scss';
+import './animation.scss';
+import MenuItem from './menuItem/menuSections.js';
 
 const nav = function(props){
-    var style = {
-        'width': '0%',
-        'margin-right': '0%'
-    };
+    var style = styles;
 
-    if(props.show){
-        style.width = '20%';
-        style["margin-right"] = '20%';
+    if(props.show === 'slide-in'){
+        style = animations.fadeIn;
+    }else if(props.show === 'slide-out'){
+        style = animations.fadeOut;
     }
 
     return(
-        <nav className={classes} style={style}>
-            <h4>Calculus</h4>
-            <span>Test</span>
-            <span>Test 1</span>
+        <nav className={style}>
+            {props.topicsList.map(topics => {
+                return (<MenuItem title={topics.topicName} subtopics={topics.subtopics}/>);
+            })}
         </nav>
     );
 };

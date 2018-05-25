@@ -1,0 +1,31 @@
+.fadeIn {
+  animation-duration: .5s;
+  animation-name: slidein;
+  left: 0%;
+}
+
+.fadeOut {
+  animation-duration: .5s;
+  animation-name: slideout;
+  left: -20%;
+}
+
+@keyframes slidein {
+  from {
+    left: -20%;
+  }
+
+  to {
+    left: 0%;
+  }
+}
+
+@keyframes slideout {
+  from {
+    left: 0%;
+  }
+
+  to {
+    left: -20%;
+  }
+}
