@@ -7,17 +7,29 @@ import animation from './margin-animation.scss';
 import ProblemArea from '../components/problemArea/problemArea.js';
 import {connect} from 'react-redux';
 import * as actionTypes from '../store/actions.js';
+import axios from 'axios';
+import * as URL from '../urlConstants.js';
 
 class App extends Component {
 
     constructor(props) {
         super(props);
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+        this.state = {
+            loading: true
+        }
     }
 
     componentDidMount() {
         this.updateWindowDimensions();
         window.addEventListener('resize', this.updateWindowDimensions);
+        axios.get(URL.BASE + 'topics').then(response => {
+            if(response.status === 200){
+                this.props.onLoadTopicsList(response.data.topicList);
+                this.setState({loading: false})
+            }
+        })
+        //this.props.onLoadTopicsList();
     }
 
     componentWillUnmount() {
@@ -34,8 +46,6 @@ class App extends Component {
             this.props.onChangeMenu();
         }
     };
-
-
 
   render() {
       var fadeInStyling = animation;
@@ -54,6 +64,7 @@ class App extends Component {
             topicsList={this.props.topicsList}
             click={this.mobileUpdater}
             selectedId={this.props.selectedId}
+            loading={this.state.loading}
         />
         <main className={fadeInStyling}>
             <Heading title="ProblemGenerator.net" pageTitle={this.props.selectedTopic} click={this.props.onChangeMenu}/>
@@ -78,7 +89,8 @@ const mapDispatchToProps = dispatch => {
     return {
         onChangeMenu: () => dispatch({type: actionTypes.CHANGE_MENU}),
         onChangeSelected: (selection) => dispatch({type: actionTypes.SELECT_TOPIC, newSelection: selection}),
-        onUpdateWindowSize: (newWindowSize) => dispatch({type: actionTypes.UPDATE_WINDOW_SIZE, windowSize: newWindowSize})
+        onUpdateWindowSize: (newWindowSize) => dispatch({type: actionTypes.UPDATE_WINDOW_SIZE, windowSize: newWindowSize}),
+        onLoadTopicsList: (newTopicList) => dispatch({type: actionTypes.LOAD_TOPIC_LIST, newTopicList: newTopicList})
     };
 };
 

@@ -3,7 +3,10 @@ import style from './problemArea.scss';
 import ProgressBar from './progressBar/progressBar.js';
 import * as actionTypes from "../../store/actions";
 import {connect} from 'react-redux';
+import axios from 'axios';
+import * as URL from '../../urlConstants.js';
 const difficulties = ['Easy', 'Medium', 'Hard', 'Insane'];
+
 
 class problemArea extends Component {
     state = {
@@ -16,6 +19,28 @@ class problemArea extends Component {
         });
     };
 
+    componentDidMount(){
+        this.generateNewProblem();
+    }
+
+    generateNewProblem = () => {
+        axios.get(URL.BASE + 'generate/' + this.props.selectedId + '/' + this.props.difficulty).then(response => {
+            if(response.status === 200){
+                this.props.onLoadProblem(response.data.problem);
+            }
+        });
+    };
+
+    checkProblem = () => {
+        if(this.state.answer !== null || this.state.answer !== '') {
+            axios.get(URL.BASE + 'check/' + encodeURIComponent(this.state.answer)).then(response => {
+                if (response.status === 200) {
+                    this.props.addResult(response.data.correct);
+                }
+            });
+        }
+    };
+
     render() {
         return (
             <div className={style.problemArea}>
@@ -24,9 +49,9 @@ class problemArea extends Component {
                 <div className={style.svg} dangerouslySetInnerHTML={{__html: this.props.problem.svg}}></div>
                 <input onChange={this.updateAnswer}></input>
                 <div className={style.buttonGroup}>
-                    <ProgressBar width={10}/>
-                    <button>Submit</button>
-                    <button>Skip</button>
+                    <ProgressBar width={this.props.averageResult * 100}/>
+                    <button onClick={this.checkProblem}>Submit</button>
+                    <button onClick={this.generateNewProblem}>Skip</button>
                     <button onClick={this.props.onChangeDifficulty}>{difficulties[this.props.difficulty]}</button>
                 </div>
             </div>
@@ -38,13 +63,17 @@ const mapStateToProps = state => {
     return {
         difficulty: state.difficulty,
         selectedTopic: state.selectedTopic,
-        problem: state.problem
+        problem: state.problem,
+        selectedId: state.selectedId,
+        averageResult: state.averageResult
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        onChangeDifficulty: () => dispatch({type: actionTypes.CHANGE_DIFFICULTY})
+        onChangeDifficulty: () => dispatch({type: actionTypes.CHANGE_DIFFICULTY}),
+        onLoadProblem: (problem) => dispatch({type: actionTypes.LOAD_PROBLEM, newProblem: problem}),
+        addResult: (result) => dispatch({type: actionTypes.ADD_PROBLEM_RESULT, newResult: result})
     };
 };
 

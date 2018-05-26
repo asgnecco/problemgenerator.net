@@ -13,18 +13,25 @@ const nav = function(props){
         style = animations.fadeOut;
     }
 
+    var content = null;
+    if(!props.loading){
+        content = props.topicsList.map(topics => {
+            return (<MenuItem
+                    key={topics.id}
+                    title={topics.topicName}
+                    subtopics={topics.subtopics}
+                    click={props.click}
+                    selectedId={props.selectedId}
+                />
+            );
+        });
+    }else{
+        content = <p className={styles.loadText}>Loading...</p>
+    }
+
     return(
         <nav className={style}>
-            {props.topicsList.map(topics => {
-                return (<MenuItem
-                            key={topics.id}
-                            title={topics.topicName}
-                            subtopics={topics.subtopics}
-                            click={props.click}
-                            selectedId={props.selectedId}
-                        />
-                );
-            })}
+            {content}
         </nav>
     );
 };
