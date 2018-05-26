@@ -1,15 +1,17 @@
 {
-  "name": "problem-generator-back-end",
+  "name": "pg-back-end",
   "version": "1.0.0",
-  "description": "",
+  "description": "Server end for serving, storing, and comparing math problems",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "author": "Alex Born",
   "license": "ISC",
   "dependencies": {
     "express": "^4.16.3",
     "mathjax-node": "^2.1.0"
-  }
+  },
+  "devDependencies": {}
 }
