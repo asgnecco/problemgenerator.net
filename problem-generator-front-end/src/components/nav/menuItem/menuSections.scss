@@ -17,6 +17,11 @@
   }
 
   p:hover {
-    background-color: lighten(#353535, 10%);
+    background-color: lighten(#353535, 16%)!important;
   }
+}
+
+.selectedItem {
+  //box-shadow: 2px 2px #2B69FF;
+  background-color: lighten(#353535, 10%)!important;
 }

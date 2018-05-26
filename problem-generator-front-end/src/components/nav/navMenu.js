@@ -16,7 +16,14 @@ const nav = function(props){
     return(
         <nav className={style}>
             {props.topicsList.map(topics => {
-                return (<MenuItem key={topics.id} title={topics.topicName} subtopics={topics.subtopics} click={props.click}/>);
+                return (<MenuItem
+                            key={topics.id}
+                            title={topics.topicName}
+                            subtopics={topics.subtopics}
+                            click={props.click}
+                            selectedId={props.selectedId}
+                        />
+                );
             })}
         </nav>
     );

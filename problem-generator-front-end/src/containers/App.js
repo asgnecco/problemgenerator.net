@@ -49,7 +49,12 @@ class App extends Component {
       }
     return (
       <div className={classes}>
-        <NavMenu show={this.props.menu} topicsList={this.props.topicsList} click={this.mobileUpdater}/>
+        <NavMenu
+            show={this.props.menu}
+            topicsList={this.props.topicsList}
+            click={this.mobileUpdater}
+            selectedId={this.props.selectedId}
+        />
         <main className={fadeInStyling}>
             <Heading title="ProblemGenerator.net" pageTitle={this.props.selectedTopic} click={this.props.onChangeMenu}/>
             <ProblemArea/>
@@ -64,7 +69,8 @@ const mapStateToProps = state => {
         menu: state.menu,
         selectedTopic: state.selectedTopic,
         topicsList: state.topicsList,
-        windowSize: state.windowSize
+        windowSize: state.windowSize,
+        selectedId: state.selectedId
     };
 };
 

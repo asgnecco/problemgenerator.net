@@ -6,7 +6,11 @@ const menuSection = (props) => {
         <div className={style.subSection}>
             <h4>{props.title}:</h4>
             {props.subtopics.map(topic => {
-                return <p key={topic.id} onClick={() => props.click(topic.id)}>{topic.name}</p>;
+                return <p
+                    className={(topic.id === props.selectedId) ? style.selectedItem : null}
+                    key={topic.id}
+                    onClick={() => props.click(topic.id)}>{topic.name}
+                </p>;
             })}
         </div>
     );
