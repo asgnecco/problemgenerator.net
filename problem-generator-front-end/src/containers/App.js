@@ -9,18 +9,47 @@ import {connect} from 'react-redux';
 import * as actionTypes from '../store/actions.js';
 
 class App extends Component {
+
+    constructor(props) {
+        super(props);
+        this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+    }
+
+    componentDidMount() {
+        this.updateWindowDimensions();
+        window.addEventListener('resize', this.updateWindowDimensions);
+    }
+
+    componentWillUnmount() {
+        this.removeEventListener('resize', this.updateWindowDimensions);
+    }
+
+    updateWindowDimensions(){
+        this.props.onUpdateWindowSize({width: window.innerWidth, height: window.innerHeight});
+    }
+
+    mobileUpdater = (menuId) => {
+        this.props.onChangeSelected(menuId);
+        if(this.props.windowSize.width <= 600){
+            this.props.onChangeMenu();
+        }
+    };
+
+
+
   render() {
       var fadeInStyling = animation;
 
-      if(this.props.menu === 'slide-in'){
-          fadeInStyling = animation.fadeIn;
-      }else{
-          fadeInStyling = animation.fadeOut;
+      if(this.props.windowSize.width >= 600){
+          if(this.props.menu === 'slide-in'){
+              fadeInStyling = animation.fadeIn;
+          }else if(this.props.menu === 'slide-out'){
+              fadeInStyling = animation.fadeOut;
+          }
       }
-
     return (
       <div className={classes}>
-        <NavMenu show={this.props.menu} topicsList={this.props.topicsList} click={this.props.onChangeSelected}/>
+        <NavMenu show={this.props.menu} topicsList={this.props.topicsList} click={this.mobileUpdater}/>
         <main className={fadeInStyling}>
             <Heading title="ProblemGenerator.net" pageTitle={this.props.selectedTopic} click={this.props.onChangeMenu}/>
             <ProblemArea/>
@@ -34,14 +63,16 @@ const mapStateToProps = state => {
     return {
         menu: state.menu,
         selectedTopic: state.selectedTopic,
-        topicsList: state.topicsList
+        topicsList: state.topicsList,
+        windowSize: state.windowSize
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
         onChangeMenu: () => dispatch({type: actionTypes.CHANGE_MENU}),
-        onChangeSelected: (selection) => dispatch({type: actionTypes.SELECT_TOPIC, newSelection: selection})
+        onChangeSelected: (selection) => dispatch({type: actionTypes.SELECT_TOPIC, newSelection: selection}),
+        onUpdateWindowSize: (newWindowSize) => dispatch({type: actionTypes.UPDATE_WINDOW_SIZE, windowSize: newWindowSize})
     };
 };
 

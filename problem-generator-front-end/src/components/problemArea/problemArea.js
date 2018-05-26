@@ -6,13 +6,23 @@ import {connect} from 'react-redux';
 const difficulties = ['Easy', 'Medium', 'Hard', 'Insane'];
 
 class problemArea extends Component {
+    state = {
+        answer: ''
+    };
+
+    updateAnswer = (event) => {
+        this.setState({
+            answer: event.target.value
+        });
+    };
+
     render() {
         return (
             <div className={style.problemArea}>
                 <h2>Problem {this.props.problem.id}</h2>
                 <p>{this.props.problem.description}</p>
                 <div className={style.svg} dangerouslySetInnerHTML={{__html: this.props.problem.svg}}></div>
-                <input></input>
+                <input onChange={this.updateAnswer}></input>
                 <div className={style.buttonGroup}>
                     <ProgressBar width={10}/>
                     <button>Submit</button>

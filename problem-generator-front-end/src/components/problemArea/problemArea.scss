@@ -1,7 +1,7 @@
 .problemArea {
   background: #353535;
   border-radius: 15px;
-  height: 50vh;
+  //height: 50vh;
   margin: 4% 10% 2% 10%;
   padding: .5% 2%;
 
@@ -37,7 +37,7 @@
 
   input {
     width: 90%;
-    height: 20%;
+    height: 4em;
     padding: 6px 10px;
     box-sizing: border-box;
     border: 2px solid #ccc;
@@ -60,12 +60,15 @@
 }
 
 .buttonGroup {
-  margin: 2.5% 5%;
-  padding: 2%;
-  width: 100%;
-  float: right;
-  * {
-    float: right;
-    margin-left: 1.5%;
+  display: grid;
+  margin: 1em 5%;
+  grid-template-columns: 1fr;
+  grid-gap: 1em;
+  @media(min-width: 800px) {
+    grid-template-columns: 3fr 1fr 1fr 1fr;
+  }
+  .wrapper > * {
+    background: #eee;
+    display: inline-block;
   }
 }

@@ -4,7 +4,9 @@ import {CHANGE_DIFFICULTY, CHANGE_MENU} from "./actions";
 const initState = {
     menu: null,
     difficulty: 0, // Represents easy
-    selectedTopic: 'Select a Topic',
+    selectedTopic: 'Derivatives',
+    selectedId: 1,
+    windowSize: {width: 0, height: 0},
     topicsList: [
         {
             topicName: 'Calculus',
@@ -62,12 +64,20 @@ const reducer = (state = initState, action) => {
                 return {...state, menu: 'slide-out'};
             }
         case actionTypes.CHANGE_DIFFICULTY:
-            return {...state, difficulty: (state.difficulty + 1) % SUPPORTED_DIFFICULTIES}
+            return {...state, difficulty: (state.difficulty + 1) % SUPPORTED_DIFFICULTIES};
         case actionTypes.SELECT_TOPIC:
-            return {...state, selectedTopic: getNameWithId(state.topicsList, action.newSelection)}
+            return {...state,
+                selectedTopic: getNameWithId(state.topicsList, action.newSelection),
+                selectedId: action.newSelection,
+            };
+        case actionTypes.UPDATE_WINDOW_SIZE:
+            return {
+                ...state,
+                windowSize: action.windowSize
+            };
+        default:
+            return state;
     }
-
-    return state;
 };
 
 export default reducer;
