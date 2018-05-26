@@ -33,7 +33,7 @@ class problemArea extends Component {
 
     checkProblem = () => {
         if(this.state.answer !== null || this.state.answer !== '') {
-            axios.get(URL.BASE + 'check/' + encodeURIComponent(this.state.answer)).then(response => {
+            axios.get(URL.BASE + 'check/' + this.props.problem.id + '/' + encodeURIComponent(this.state.answer)).then(response => {
                 if (response.status === 200) {
                     this.props.addResult(response.data.correct);
                 }

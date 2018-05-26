@@ -3,14 +3,6 @@ const PORT = 8080;
 var app = express();
 var mjAPI = require("mathjax-node");
 
-/*
-mjAPI.config({
-  MathJax: {
-
-  }
-});
-*/
-
 // Allow cross reference
 app.use(function (req, res, next) {
 
@@ -82,9 +74,6 @@ var num = Math.random();
 var exampleMath = 'E=\\int_a^b \\frac{\\sqrt{x^2 + (\\sin{' + num + '})^2}}{b*x + c} dx';
 
 /* Some examples of listeners */
-// app.get('/', (req, res) => {
-// 	res.send('Successful request.');
-// });
 
 app.get('/api/topics', (req, res) => {
 	res.send({
@@ -101,17 +90,17 @@ app.get('/api/generate/:topic/:difficulty', function (req, res) {
     console.log('Request with ID: ' + req.params.topic + ' and difficulty: ' + req.params.difficulty);
     res.send({
         problem: {
-            id: 1,
-            description: 'Solve the integral:',
+            id: 2,
+            description: 'Solve the integral:' + Math.random(),
             svg: texToSVG(exampleMath)
         }
     });
 });
 
 // URL encoded
-app.get('/api/check/:answer', function (req, res) {
+app.get('/api/check/:id/:answer', function (req, res) {
     // Topic is passed by ID see above
-    console.log('Answer request with problem: ' + req.params.answer);
+    console.log('Answer request with problem: ' + req.params.answer + 'Problem ID: ' + req.params.id);
     res.send({
         correct: 1 // 1 for true 0 for false or a number in between
     });
