@@ -52,11 +52,27 @@
 
 .svg {
   padding-right: 2%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  @media(max-width: 600px){
+    width: 100%;
+  }
+  @media(max-width: 800px){
+    width: 85%;
+  }
+  width: 70%;
+  margin: 4% auto;
   svg {
     color: white;
     display: block;
     margin: 2% auto;
+    width: 80%;
+    height: 100%;
   }
+  //height: auto;
+  overflow: hidden;
 }
 
 .buttonGroup {
