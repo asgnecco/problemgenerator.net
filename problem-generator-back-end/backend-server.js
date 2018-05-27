@@ -1,7 +1,7 @@
-const express = require('express');
 const PORT = 8080;
-const app = express();
-var mjAPI = require("mathjax-node");
+var dbnextid = 0;
+const dburl = "mongodb://localhost:27017/";
+const dbname = "mydb";
 var generator = require('./practice-generator');
 var topicsList = [
     {
@@ -12,6 +12,12 @@ var topicsList = [
             ]
     }
 ];
+
+const express = require('express');
+const app = express();
+var moment = require('moment');
+var mjAPI = require("mathjax-node");
+var MongoClient = require('mongodb').MongoClient;
 
 mjAPI.config({ //Configuration for MathJax
 	MathJax: {
@@ -47,6 +53,55 @@ app.get('/generate/:topic/:difficulty', function (req, res) {
 	});
 	
 	outputjson.type=problemjson.type;//Add type pair to outputjson as given from the generator
+	
+	/*MongoClient.connect(dburl, function(err, db) {
+		if (err) {throw err;}
+		var dbo = db.db(dbname);
+		var newprob = {
+			_id: dbnextid,
+			answer: problemjson.answer,
+			createtime: moment()
+		};
+		console.log("Record to be inserted: " + JSON.stringify(newprob));
+		dbo.collection("problems").insertOne(newprob, function(err, res) {
+			if (err) {throw err;}
+			console.log("1 document inserted into 'problem' collection.");
+			outputjson.problemID = dbnextid;
+			dbnextid++;
+			db.close();
+		});
+	});*/
+	
+	console.log("outputjson: " + JSON.stringify(outputjson));
+	res.json(outputjson);//Return outputjson
+});
+
+app.get('/check/:probid/:answer', function (req, res) {
+	var outputjson={};
+	
+	outputjson.problemID = req.params.probid;
+	
+	/*MongoClient.connect(dburl, function(err, db) {
+		if (err) {throw err;}
+		var dbo = db.db(dbname);
+		var requirements = {
+			_id: req.params.probid
+		};
+		dbo.collection("problems").findOne(requirements, function(err, result) {
+			if (err) {throw err;}
+			console.log(result.answer);
+			outputjson.correctAnswer = result.answer;
+			db.close();
+		});
+	});
+	if(req.params.answer.localeCompare(outputjson.correctAnswer)==0) {
+		outputjson.correct = true;
+	} else {
+		outputjson.correct = false;
+	}
+	*/
+	
+	console.log("outputjson: " + JSON.stringify(outputjson));
 	res.json(outputjson);//Return outputjson
 });
 
@@ -54,6 +109,18 @@ app.get('/topics', function (req, res) {
 	res.send({
 		topicList: topicsList
 	});
+});
+
+app.get('/'+dbname, function (req, res) {
+	/*MongoClient.connect(dburl, function(err, db) {
+ 		if (err) {throw err;}
+		var dbo = db.db(dbname);
+		dbo.collection("problems").find({}).toArray(function(err, result) {
+			if (err) {throw err;}
+			res.send(result);
+			db.close();
+		});
+	});*/
 });
 
 app.listen(PORT);
