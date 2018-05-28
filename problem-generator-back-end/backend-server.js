@@ -94,7 +94,7 @@ app.get('/check/:probid/:answer', function (req, res) {
 			db.close();
 		});
 	});
-	if(req.params.answer.localeCompare(outputjson.correctAnswer)==0) {
+	if(req.params.answer.replace(/\s+/g, '').localeCompare(outputjson.correctAnswer.replace(/\s+/g, ''))==0) {
 		outputjson.correct = true;
 	} else {
 		outputjson.correct = false;
