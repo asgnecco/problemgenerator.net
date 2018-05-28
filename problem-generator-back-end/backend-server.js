@@ -54,7 +54,7 @@ app.get('/generate/:topic/:difficulty', function (req, res) {
 	
 	outputjson.type=problemjson.type;//Add type pair to outputjson as given from the generator
 	
-	/*MongoClient.connect(dburl, function(err, db) {
+	MongoClient.connect(dburl, function(err, db) {
 		if (err) {throw err;}
 		var dbo = db.db(dbname);
 		var newprob = {
@@ -70,36 +70,45 @@ app.get('/generate/:topic/:difficulty', function (req, res) {
 			dbnextid++;
 			db.close();
 		});
-	});*/
+	});
 	
 	console.log("outputjson: " + JSON.stringify(outputjson));
 	res.json(outputjson);//Return outputjson
 });
 
-app.get('/check/:probid/:answer', function (req, res) {
+app.get('/check/:probid/:answer', async function (req, res) {
 	var outputjson={};
 	
 	outputjson.problemID = req.params.probid;
-	
-	/*MongoClient.connect(dburl, function(err, db) {
+	const db = await MongoClient.connect(dburl);
+	try {
+		const result = await db.db(dbname).collection("problems").findOne({_id: Number(req.params.probid)});
+		outputjson.correctAnswer = await result.answer;
+	} finally {
+		db.close();
+	}
+	/*await MongoClient.connect(dburl, async function(err, db) {
 		if (err) {throw err;}
 		var dbo = db.db(dbname);
 		var requirements = {
-			_id: req.params.probid
+			_id: Number(req.params.probid)
 		};
-		dbo.collection("problems").findOne(requirements, function(err, result) {
+		await dbo.collection("problems").findOne(requirements, function(err, result) {
 			if (err) {throw err;}
-			console.log(result.answer);
 			outputjson.correctAnswer = result.answer;
+			console.log("outputjson right after assignment: " + JSON.stringify(outputjson));
 			db.close();
 		});
-	});
-	if(req.params.answer.replace(/\s+/g, '').localeCompare(outputjson.correctAnswer.replace(/\s+/g, ''))==0) {
+	});*/
+	var urlanswer = String(req.params.answer).replace(/\s+/g, '');
+	var dbanswer = String(outputjson.correctAnswer).replace(/\s+/g, '');
+	console.log("outputjson: " + JSON.stringify(outputjson));
+	console.log("urlanswer: " + urlanswer + ", dbanswer: " + dbanswer);
+	if(urlanswer.localeCompare(dbanswer)==0) {
 		outputjson.correct = true;
 	} else {
 		outputjson.correct = false;
 	}
-	*/
 	
 	console.log("outputjson: " + JSON.stringify(outputjson));
 	res.json(outputjson);//Return outputjson
@@ -112,7 +121,7 @@ app.get('/topics', function (req, res) {
 });
 
 app.get('/'+dbname, function (req, res) {
-	/*MongoClient.connect(dburl, function(err, db) {
+	MongoClient.connect(dburl, function(err, db) {
  		if (err) {throw err;}
 		var dbo = db.db(dbname);
 		dbo.collection("problems").find({}).toArray(function(err, result) {
@@ -120,7 +129,7 @@ app.get('/'+dbname, function (req, res) {
 			res.send(result);
 			db.close();
 		});
-	});*/
+	});
 });
 
 app.listen(PORT);
