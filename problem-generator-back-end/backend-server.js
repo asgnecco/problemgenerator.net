@@ -1,7 +1,7 @@
 const PORT = 8080;
 var dbnextid = 0;
-const dburl = "mongodb://localhost:27017/";
-const dbname = "mydb";
+const dburl = "mongodb://localhost:27017/";//Make sure that you change these settings on the cleardatabase.js file too
+const dbname = "mydb";//Make sure that you change these settings on the cleardatabase.js file too
 var generator = require('./practice-generator');
 var topicsList = [
     {
@@ -34,7 +34,9 @@ app.get('/generate/:topic/:difficulty', function (req, res) {
 	//Places to store JSON from generator and JSON that is to be returned
 	var problemjson={};
 	var outputjson={};
-	
+	const thisprobid = dbnextid;
+	dbnextid++;
+	outputjson.problemID = thisprobid;
 	if(req.params.topic.toLowerCase().localeCompare("derivatives")==0) {//If the request is for a derivative problem
 		problemjson=generator.getDerivativeProblem();
 	}
@@ -46,9 +48,6 @@ app.get('/generate/:topic/:difficulty', function (req, res) {
 	}, function (data) {
 		if(!data.errors) {
 			outputjson.problem=data.svg;//Put the svg into the outputjson
-			console.log("SVG successfully generated.");
-		} else {
-			console.log("Failure in creating svg image out of problem.");//Log if the svg creation fails
 		}
 	});
 	
@@ -58,21 +57,16 @@ app.get('/generate/:topic/:difficulty', function (req, res) {
 		if (err) {throw err;}
 		var dbo = db.db(dbname);
 		var newprob = {
-			_id: dbnextid,
+			_id: thisprobid,
 			answer: problemjson.answer,
 			createtime: moment()
 		};
-		console.log("Record to be inserted: " + JSON.stringify(newprob));
 		dbo.collection("problems").insertOne(newprob, function(err, res) {
 			if (err) {throw err;}
-			console.log("1 document inserted into 'problem' collection.");
-			outputjson.problemID = dbnextid;
-			dbnextid++;
 			db.close();
 		});
 	});
 	
-	console.log("outputjson: " + JSON.stringify(outputjson));
 	res.json(outputjson);//Return outputjson
 });
 
@@ -82,35 +76,24 @@ app.get('/check/:probid/:answer', async function (req, res) {
 	outputjson.problemID = req.params.probid;
 	const db = await MongoClient.connect(dburl);
 	try {
-		const result = await db.db(dbname).collection("problems").findOne({_id: Number(req.params.probid)});
-		outputjson.correctAnswer = await result.answer;
+		var result = await db.db(dbname).collection("problems").findOne({_id: Number(req.params.probid)});
+		if(result == null) {outputjson.correctAnswer = "Problem not in database";}
+		else {
+			outputjson.correctAnswer = await result.answer;
+			db.db(dbname).collection("problems").deleteOne({_id: Number(req.params.probid)});
+		}
 	} finally {
 		db.close();
 	}
-	/*await MongoClient.connect(dburl, async function(err, db) {
-		if (err) {throw err;}
-		var dbo = db.db(dbname);
-		var requirements = {
-			_id: Number(req.params.probid)
-		};
-		await dbo.collection("problems").findOne(requirements, function(err, result) {
-			if (err) {throw err;}
-			outputjson.correctAnswer = result.answer;
-			console.log("outputjson right after assignment: " + JSON.stringify(outputjson));
-			db.close();
-		});
-	});*/
+	
 	var urlanswer = String(req.params.answer).replace(/\s+/g, '');
 	var dbanswer = String(outputjson.correctAnswer).replace(/\s+/g, '');
-	console.log("outputjson: " + JSON.stringify(outputjson));
-	console.log("urlanswer: " + urlanswer + ", dbanswer: " + dbanswer);
 	if(urlanswer.localeCompare(dbanswer)==0) {
 		outputjson.correct = true;
 	} else {
 		outputjson.correct = false;
 	}
 	
-	console.log("outputjson: " + JSON.stringify(outputjson));
 	res.json(outputjson);//Return outputjson
 });
 
