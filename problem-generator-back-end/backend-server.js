@@ -30,26 +30,25 @@ app.get('/', function (req,res) {
 	res.send("Where do you plan to go now?");
 });
 
-app.get('/generate/:topic/:difficulty', function (req, res) {
+app.get('/generate/:topic/:difficulty', async function (req, res) {
 	//Places to store JSON from generator and JSON that is to be returned
 	var problemjson={};
 	var outputjson={};
 	const thisprobid = dbnextid;
 	dbnextid++;
 	outputjson.problemID = thisprobid;
+	
 	if(req.params.topic.toLowerCase().localeCompare("derivatives")==0) {//If the request is for a derivative problem
 		problemjson=generator.getDerivativeProblem();
 	}
-	
-	mjAPI.typeset({//Create svg from problemjson.question
+	const data = await mjAPI.typeset({//Create svg from problemjson.question
 		math: problemjson.question,
 		format: "TeX",
 		svg:true,
-	}, function (data) {
-		if(!data.errors) {
-			outputjson.problem=data.svg;//Put the svg into the outputjson
-		}
 	});
+	if(!data.errors) {
+		outputjson.problem= await data.svg;//Put the svg into the outputjson
+	}
 	
 	outputjson.type=problemjson.type;//Add type pair to outputjson as given from the generator
 	
