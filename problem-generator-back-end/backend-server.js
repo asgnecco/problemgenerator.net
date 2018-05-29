@@ -15,6 +15,7 @@ var topicsList = [
 
 const express = require('express');
 const app = express();
+var math = require('mathjs');
 var moment = require('moment');
 var mjAPI = require("mathjax-node");
 var MongoClient = require('mongodb').MongoClient;
@@ -85,8 +86,8 @@ app.get('/check/:probid/:answer', async function (req, res) {
 		db.close();
 	}
 	
-	var urlanswer = String(req.params.answer).replace(/\s+/g, '');
-	var dbanswer = String(outputjson.correctAnswer).replace(/\s+/g, '');
+	var urlanswer = math.simplify(String(req.params.answer)).toString();
+	var dbanswer = math.simplify(String(outputjson.correctAnswer)).toString();
 	if(urlanswer.localeCompare(dbanswer)==0) {
 		outputjson.correct = true;
 	} else {
