@@ -1,5 +1,4 @@
 const PORT = 8080;
-var dbnextid = 0;
 const dburl = "mongodb://localhost:27017/";//Make sure that you change these settings on the cleardatabase.js file too
 const dbname = "mydb";//Make sure that you change these settings on the cleardatabase.js file too
 var generator = require('./practice-generator');
@@ -13,6 +12,8 @@ var topicsList = [
     }
 ];
 
+var dbnextid = 0;
+//use db.collection.find's result to figure out what to set dbnextid and/or if to do it.
 const express = require('express');
 const app = express();
 var math = require('mathjs');
