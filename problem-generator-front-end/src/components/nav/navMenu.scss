@@ -9,4 +9,16 @@ nav {
   color: white;
   width: 20%;
   left: -20%;
+
+  @media (max-width: 600px) {
+    width: 100%;
+    left: -100%;
+  }
+}
+
+.loadText {
+  text-align: center;
+  margin: 30vh auto;
+  color: #1bff37;
+  font-size: 30px;
 }

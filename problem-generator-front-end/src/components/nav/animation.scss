@@ -2,12 +2,19 @@
   animation-duration: .5s;
   animation-name: slidein;
   left: 0%;
+  @media (max-width: 600px) {
+    animation-name: slideinmoble;
+  }
 }
 
 .fadeOut {
   animation-duration: .5s;
   animation-name: slideout;
   left: -20%;
+  @media (max-width: 600px) {
+    animation-name: slideoutmoble;
+    left: -100%;
+  }
 }
 
 @keyframes slidein {
@@ -27,5 +34,25 @@
 
   to {
     left: -20%;
+  }
+}
+
+@keyframes slideinmoble {
+  from {
+    left: -100%;
+  }
+
+  to {
+    left: 0%;
+  }
+}
+
+@keyframes slideoutmoble {
+  from {
+    left: 0%;
+  }
+
+  to {
+    left: -100%;
   }
 }

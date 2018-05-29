@@ -1,7 +1,7 @@
 .problemArea {
   background: #353535;
   border-radius: 15px;
-  height: 50vh;
+  //height: 50vh;
   margin: 4% 10% 2% 10%;
   padding: .5% 2%;
 
@@ -37,7 +37,7 @@
 
   input {
     width: 90%;
-    height: 20%;
+    height: 4em;
     padding: 6px 10px;
     box-sizing: border-box;
     border: 2px solid #ccc;
@@ -52,39 +52,39 @@
 
 .svg {
   padding-right: 2%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  @media(max-width: 600px){
+    width: 100%;
+  }
+  @media(max-width: 800px){
+    width: 85%;
+  }
+  width: 70%;
+  margin: 4% auto;
   svg {
     color: white;
     display: block;
     margin: 2% auto;
+    width: 80%;
+    height: 100%;
   }
+  //height: auto;
+  overflow: hidden;
 }
 
 .buttonGroup {
-  margin: 2.5% 5%;
-  padding: 2%;
-  width: 100%;
-  float: right;
-  * {
-    float: right;
-    margin-left: 1.5%;
+  display: grid;
+  margin: 1em 5%;
+  grid-template-columns: 1fr;
+  grid-gap: 1em;
+  @media(min-width: 800px) {
+    grid-template-columns: 3fr 1fr 1fr 1fr;
   }
-}
-
-.progressHolder {
-  display: inline-block;
-  width: 40%;
-  height: 20px;
-  float: left;
-  border-radius: 5px;
-  background: white;
-  margin-left: 10%;
-
-  div {
-    background: #1bff37;
-    height: 20px;
-    border-radius: 5px;
-    width: 50%;
-    float: left;
-    margin: 0%;
+  .wrapper > * {
+    background: #eee;
+    display: inline-block;
   }
 }
