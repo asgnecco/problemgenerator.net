@@ -12,14 +12,29 @@ var topicsList = [
     }
 ];
 
-var dbnextid = 0;
-//use db.collection.find's result to figure out what to set dbnextid and/or if to do it.
 const express = require('express');
 const app = express();
 var math = require('mathjs');
 var moment = require('moment');
 var mjAPI = require("mathjax-node");
 var MongoClient = require('mongodb').MongoClient;
+
+var dbnextid = 0;
+//use db.collection.find's result to figure out what to set dbnextid and/or if to do it.
+async function initdbnextid () {
+	const db = await MongoClient.connect(dburl);
+	var result = await db.db(dbname).collection("problems").find();
+	var highestid = 0;
+	var waste = await result.each(function(err, item) {
+		if(item != null) {
+			if(item._id > highestid) {highestid = item._id;}
+		} else {
+			dbnextid = highestid + 1;
+		}
+	});
+	db.close();
+}
+initdbnextid();
 
 mjAPI.config({ //Configuration for MathJax
 	MathJax: {
