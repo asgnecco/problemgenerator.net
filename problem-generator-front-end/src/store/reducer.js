@@ -18,8 +18,7 @@ const initState = {
         description: 'Loading...',
         svg: ''
     },
-    results: [0, 0, 0, 0, 0],
-    averageResult: 0.0
+    results: 0.0
 };
 
 const SUPPORTED_DIFFICULTIES = 4;
@@ -68,21 +67,14 @@ const reducer = (state = initState, action) => {
                 problem: action.newProblem
             };
         case actionTypes.ADD_PROBLEM_RESULT:
-            var results = state.results;
-            results.splice(0, 1);
-            results.push(action.newResult);
+            var results = state.results + action.newResult;
 
-            var sum = 0.0;
-            for(var i = 0; i < results.length; i++){
-                sum += results[i];
-            }
-
-            console.log(results);
+            if(results > 100) {results = 100;}
+            else if(results < 0) {results = 0;}
 
             return {
                 ...state,
-                results: results,
-                averageResult: sum / results.length
+                results: results
             };
         default:
             return state;

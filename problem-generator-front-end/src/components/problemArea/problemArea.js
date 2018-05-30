@@ -39,6 +39,7 @@ class problemArea extends Component {
                 }
             });
         }
+        this.generateNewProblem();
     };
 
     render() {
@@ -49,7 +50,7 @@ class problemArea extends Component {
                 <div className={style.svg} dangerouslySetInnerHTML={{__html: this.props.problem.svg}}></div>
                 <input onChange={this.updateAnswer}></input>
                 <div className={style.buttonGroup}>
-                    <ProgressBar width={this.props.averageResult * 100}/>
+                    <ProgressBar width={this.props.results}/>
                     <button onClick={this.checkProblem}>Submit</button>
                     <button onClick={this.generateNewProblem}>Skip</button>
                     <button onClick={this.props.onChangeDifficulty}>{difficulties[this.props.difficulty]}</button>
@@ -65,7 +66,7 @@ const mapStateToProps = state => {
         selectedTopic: state.selectedTopic,
         problem: state.problem,
         selectedId: state.selectedId,
-        averageResult: state.averageResult
+        results: state.results
     };
 };
 
