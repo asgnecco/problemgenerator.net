@@ -1,13 +1,15 @@
 const PORT = 8080;
 const dburl = "mongodb://localhost:27017/";//Make sure that you change these settings on the cleardatabase.js file too
 const dbname = "mydb";//Make sure that you change these settings on the cleardatabase.js file too
-var generator = require('./practice-generator');
+var generator = require('./superTest');
 var topicsList = [
     {
         topicName: 'Calculus',
         id: 1,
         subtopics: [
-            {name: 'Derivatives', id: 1}
+            {name: 'Derivatives', id: 1},
+            {name: 'Integrals', id: 2},
+            {name: 'Summations', id: 3}
             ]
     }
 ];
@@ -77,9 +79,13 @@ app.get('/api/generate/:topic/:difficulty', async function (req, res) {
 	outputjson.id = thisprobid;
 
 	if(req.params.topic == 1) {//If the request is for a derivative problem
-		problemjson = await generator.getDerivativeProblem();
+		problemjson = await generator.getQuestion('derivative');
+	} else if (req.params.topic == 2) {
+		problemjson = await generator.getQuestion('integral');
+	} else if (req.params.topic == 3) {
+		problemjson = await generator.getQuestion('summation');
 	}
-	//onsole.log(JSON.stringify(problemjson));
+	//console.log(JSON.stringify(problemjson));
 	const data = await mjAPI.typeset({//Create svg from problemjson.question
 		math: problemjson.question,
 		format: "TeX",
